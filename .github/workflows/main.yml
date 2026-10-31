@@ -24,10 +24,12 @@ jobs:
           flutter-version: '3.x'
           channel: 'stable'
 
-      - name: Generate missing Android files and Get Dependencies
+      - name: Generate Android files, Fix SDK, and Get Dependencies
         run: |
-          # هذا السطر سيقوم بإنشاء مجلد android تلقائياً
-          flutter create . --project-name eps_assistant_dz
+          flutter create . --project-name eps_assistant_dz --platforms=android
+          # إصلاح إصدار الأندرويد ليتوافق مع المكتبات
+          sed -i 's/minSdkVersion = flutter.minSdkVersion/minSdkVersion = 23/' android/app/build.gradle.kts || true
+          sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 23/' android/app/build.gradle || true
           flutter pub get
 
       - name: Build APK
